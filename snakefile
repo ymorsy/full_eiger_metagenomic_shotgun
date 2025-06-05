@@ -1,11 +1,9 @@
 # define the config file
 configfile: "/capstor/scratch/cscs/ymorsy/workflow/config.yaml"
 
-import os 
+import os
 
-slurm_array_task_id = int(os.environ.get("SLURM_ARRAY_TASK_ID", "0"))
-
-def MKINPUT(filename):
+def get_ids(filename):
     with open(filename, "r") as file:
         id_column = []
         for line in file:
@@ -13,17 +11,15 @@ def MKINPUT(filename):
             id_column.append(columns[0])
     return id_column
 
-
-ids = MKINPUT(config["ids_file_name"])
-
+ids = get_ids(config["ids_file_name"])
 
 rule targets:
     input:
-        expand(config["output_path"] + "/01_non_human/{sample}_unmapped.fastq.1.gz", sample=ids[slurm_array_task_id]),
-        expand(config["output_path"] + "/01_non_human/{sample}_unmapped.fastq.2.gz", sample=ids[slurm_array_task_id]),
-        expand(config["output_path"] + "/02_non_human_concat/{sample}_unmapped.fastq.gz", sample=ids[slurm_array_task_id]),
-        expand(config["output_path"] + "/03_Metaphlan_output/{sample}_profile.tsv", sample=ids[slurm_array_task_id]),
-        expand(config["output_path"] + "/04_Humann_output/{sample}", sample=ids[slurm_array_task_id]),
+        expand(config["output_path"] + "/01_non_human/{sample}_unmapped.fastq.1.gz", sample=ids),
+        expand(config["output_path"] + "/01_non_human/{sample}_unmapped.fastq.2.gz", sample=ids),
+        expand(config["output_path"] + "/02_non_human_concat/{sample}_unmapped.fastq.gz", sample=ids),
+        expand(config["output_path"] + "/03_Metaphlan_output/{sample}_profile.tsv", sample=ids),
+        expand(config["output_path"] + "/04_Humann_output/{sample}", sample=ids),
 
 
 
@@ -95,7 +91,32 @@ rule humann:
             --threads {threads} \
             --memory-use maximum \
             --prescreen-threshold 0.0001 \
-            --nucleotide-database config["db_path"] + "/04_chocophlan" \
-            --protein-database config["db_path"] + "/05_uniref" \
-            --metaphlan-options "--bowtie2db " + config["db_path"] + "/02_metaphlan3_db --nproc {threads}"
+            --nucleotide-database {config[db_path]}/04_chocophlan \
+            --protein-database {config[db_path]}/05_uniref \
+            --metaphlan-options "--bowtie2db {config[db_path]}/02_metaphlan3_db --nproc {threads}"
+        """
+
+rule kraken2:
+    input:
+        R1=config["input_fastq_path"] + "/{sample}" + config["R1_extension"],
+        R2=config["input_fastq_path"] + "/{sample}" + config["R2_extension"],
+    output:
+        res=config["output_path"] + "/kraken2/k2_{sample}_report.txt",
+    resources:
+        threads=60,
+        mem_mb=7700,
+        time="1:00:00",
+    shell:
+        """
+        kraken2 \
+        --db {config["db_path"]}/kradb \
+        --threads {resources.threads} \
+        --paired \
+        --use-names \
+        --gzip-compressed \
+        --report-zero-counts \
+        --use-mpa-style \
+        --report {output.res} \
+        {input.R1} \
+        {input.R2}
         """
