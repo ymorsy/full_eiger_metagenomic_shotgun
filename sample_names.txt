@@ -1,0 +1,8 @@
+/capstor/scratch/cscs/ymorsy/01_raw_fastq/LT004_S107_R1_001.fastq.gz
+/capstor/scratch/cscs/ymorsy/01_raw_fastq/LT004_S107_R2_001.fastq.gz
+/capstor/scratch/cscs/ymorsy/01_raw_fastq/LT096_S97_R1_001.fastq.gz
+/capstor/scratch/cscs/ymorsy/01_raw_fastq/LT096_S97_R2_001.fastq.gz
+/capstor/scratch/cscs/ymorsy/01_raw_fastq/LT097_S98_R1_001.fastq.gz
+/capstor/scratch/cscs/ymorsy/01_raw_fastq/LT097_S98_R2_001.fastq.gz
+/capstor/scratch/cscs/ymorsy/01_raw_fastq/LT098_S99_R1_001.fastq.gz
+/capstor/scratch/cscs/ymorsy/01_raw_fastq/LT098_S99_R2_001.fastq.gz
