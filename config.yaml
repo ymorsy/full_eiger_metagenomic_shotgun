@@ -1,5 +1,6 @@
 ids_file_name: "/capstor/scratch/cscs/ymorsy/workflow/sample_names.txt"
-input_fastq_path: "/capstor/scratch/cscs/ymorsy/01_raw_fastq/"
+input_fastq_path: "/capstor/scratch/cscs/ymorsy/01_raw_fastq"
 R1_extension: "_R1_001.fastq.gz"
 R2_extension: "_R2_001.fastq.gz"
 db_path: "/capstor/scratch/cscs/ymorsy/00_DB"
+output_path: "/capstor/scratch/cscs/ymorsy"
